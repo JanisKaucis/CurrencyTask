@@ -61,7 +61,7 @@ trait CurrencyExchange
         $existingDates = DB::table('currencies')->distinct()->pluck('date')->toArray();
         $currencies = $array['Currencies']['Currency'];
         if (in_array($date, $existingDates) || !$currencies) {
-            return;
+            return $currenciesArray;
         }
         foreach ($currencies as $currency) {
             $currenciesArray[] = [

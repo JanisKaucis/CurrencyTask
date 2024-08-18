@@ -25,4 +25,4 @@ Route::get('/', [CurrenciesController::class, 'index'])->name('currencies.index'
 | Routes for currencies
 |--------------------------------------------------------------------------
 */
-Route::get('/popup-test', [CurrenciesDataController::class, 'getPopupText'])->name('currencies.popup');
+Route::get('/currencies-today', [CurrenciesDataController::class, 'getTodayCurrencies'])->name('currencies.today');
