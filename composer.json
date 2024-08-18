@@ -12,7 +12,10 @@
         "laravel/jetstream": "^4.3",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "tightenco/ziggy": "^2.0"
+        "tightenco/ziggy": "^2.0",
+        "ext-libxml": "*",
+        "ext-simplexml": "*",
+        "ext-curl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

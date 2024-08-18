@@ -10,6 +10,9 @@ class CurrenciesController
      */
     public function index()
     {
-        return Inertia::render('Currencies/CurrenciesIndex');
+        $title = 'currency';
+        return Inertia::render('Currencies/CurrenciesIndex', [
+            'title' => $title
+        ]);
     }
 }
