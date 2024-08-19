@@ -13,25 +13,31 @@ export default {
             maxDate2: null,
             currentTab: null,
             countryFilter: null,
+            error: false,
+            errorMessage: null,
             formattedMonth: {
-                0 : 'Jan',
-                1 : 'Feb',
-                2:  'Mar',
+                0: 'Jan',
+                1: 'Feb',
+                2: 'Mar',
                 3: 'Apr',
-                4 : 'May',
-                5 : 'Jun',
-                6 : 'Jul',
-                7 : 'Aug',
-                8 : 'Sep',
-                9 : 'Oct',
-                10 : 'Nov',
-                11 : 'Dec',
+                4: 'May',
+                5: 'Jun',
+                6: 'Jul',
+                7: 'Aug',
+                8: 'Sep',
+                9: 'Oct',
+                10: 'Nov',
+                11: 'Dec',
             },
         }
     },
     methods: {
         getTodayCurrencyExchangeValues() {
             axios.get(route('currencies.today')).then((response) => {
+                if (response.data.error) {
+                    this.error = true;
+                    this.errorMessage = response.data.message;
+                }
                 this.allCurrencies = response.data.todayCurrencies;
                 this.dateFrom = response.data.todayDate;
                 this.dateTo = response.data.todayDate;
@@ -67,9 +73,7 @@ export default {
             this.currentTab = index;
         }
     },
-    computed: {
-
-    },
+    computed: {},
     mounted() {
         this.getTodayCurrencyExchangeValues();
         this.getDatesWithCurrencyExchangeData();
@@ -109,36 +113,51 @@ export default {
                 </div>
             </div>
             <div class="sm:hidden">
-                <label for="tabs" class="sr-only">Select a tab</label>
-                <template v-for="(currencies, index) in allCurrencies" :key="index">
-                    <button @click="changeTable(index)"
-                            :class="[index === currentTab ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']"
-                            :aria-current="index === currentTab ? 'page' : undefined">{{ new Date(index).getDate() + '.' + (new Date(index).getMonth() + 1)  }}
-                    </button>
+                <template v-if="error">
+                    <h1 class="sm:items-center text-center text-base font-semibold leading-6 text-gray-900">
+                        {{ errorMessage }}</h1>
                 </template>
-                <template v-for="(currencies, index) in allCurrencies" :key="index">
+                <template v-else>
+                    <label for="tabs" class="sr-only">Select a tab</label>
+                    <template v-for="(currencies, index) in allCurrencies" :key="index">
+                        <button @click="changeTable(index)"
+                                :class="[index === currentTab ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']"
+                                :aria-current="index === currentTab ? 'page' : undefined">
+                            {{ new Date(index).getDate() + '.' + (new Date(index).getMonth() + 1) }}
+                        </button>
+                    </template>
+                    <template v-for="(currencies, index) in allCurrencies" :key="index">
 
-                    <currencies-table :currencies="currencies" :id="'table'+index"
-                                      :class="[index !== currentTab ? 'hidden' : '']"/>
+                        <currencies-table :currencies="currencies" :id="'table'+index"
+                                          :class="[index !== currentTab ? 'hidden' : '']"/>
+                    </template>
                 </template>
             </div>
             <div class="hidden sm:block">
-                <div class="border-b border-gray-200">
-                    <nav class="" aria-label="Tabs">
-                        <div class="px-4 sm:px-6 lg:px-8">
-                            <template v-for="(currencies, index) in allCurrencies" :key="index">
-                                <button @click="changeTable(index)"
-                                        :class="[index === currentTab ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']"
-                                        :aria-current="index === currentTab ? 'page' : undefined">{{ new Date(index).getDate() + '. ' + formattedMonth[(new Date(index).getMonth())]  }}
-                                </button>
-                            </template>
-                            <template v-for="(currencies, index) in allCurrencies" :key="index">
-                                <currencies-table :currencies="currencies" :id="'table'+index"
-                                                  :class="[index !== currentTab ? 'hidden' : '']"/>
-                            </template>
-                        </div>
-                    </nav>
-                </div>
+                <template v-if="error">
+                    <h1 class="sm:items-center text-center text-base font-semibold leading-6 text-gray-900">
+                        {{ errorMessage }}</h1>
+                </template>
+                <template v-else>
+                    <div class="border-b border-gray-200">
+                        <nav class="" aria-label="Tabs">
+                            <div class="px-4 sm:px-6 lg:px-8">
+                                <template v-for="(currencies, index) in allCurrencies" :key="index">
+                                    <button @click="changeTable(index)"
+                                            :class="[index === currentTab ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']"
+                                            :aria-current="index === currentTab ? 'page' : undefined">{{
+                                            new Date(index).getDate() + '. ' + formattedMonth[(new Date(index).getMonth())]
+                                        }}
+                                    </button>
+                                </template>
+                                <template v-for="(currencies, index) in allCurrencies" :key="index">
+                                    <currencies-table :currencies="currencies" :id="'table'+index"
+                                                      :class="[index !== currentTab ? 'hidden' : '']"/>
+                                </template>
+                            </div>
+                        </nav>
+                    </div>
+                </template>
             </div>
         </div>
     </div>

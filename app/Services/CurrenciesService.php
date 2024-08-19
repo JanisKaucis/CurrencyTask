@@ -16,14 +16,20 @@ class CurrenciesService
     {
         /*If week day is in weekend, then it will find last week day, because bank does not show currencies in weekend
         days*/
-        $data['todayDate'] = Carbon::now()->nextWeekday()->previousWeekday()->format('Y-m-d');
-        $todayCurrencies = DB::select('SELECT * FROM currencies WHERE date="' . $data['todayDate'] . '"');
-        $data['groupedCurrencies'] = [];
-        foreach ($todayCurrencies as $currency) {
-            $currency = (array)$currency;
-            $data['groupedCurrencies'][$currency['date']][] = $currency;
+        $data = [];
+        try {
+            $data['todayDate'] = Carbon::now()->nextWeekday()->previousWeekday()->format('Y-m-d');
+            $todayCurrencies = DB::select('SELECT * FROM currencies WHERE date="' . $data['todayDate'] . '"');
+            $data['groupedCurrencies'] = [];
+            foreach ($todayCurrencies as $currency) {
+                $currency = (array)$currency;
+                $data['groupedCurrencies'][$currency['date']][] = $currency;
+            }
+        } catch (\Exception $exception) {
+            $data = [];
+            Log::debug('FAILED: getTodayCurrencies');
+            Log::debug($exception);
         }
-
         return $data;
     }
 
@@ -33,11 +39,15 @@ class CurrenciesService
     public function getCurrencyExchangeRatesDates(): array
     {
         $data = [];
-
-        $lastCurrencyDate = DB::select('SELECT date FROM currencies ORDER BY date DESC LIMIT 1');
-        $data['last_date'] = array_column($lastCurrencyDate, 'date')[0] ?? null;
-        $data['first_date'] = Carbon::parse($data['last_date'])->subWeekdays(6)->format('Y-m-d');
-
+        try {
+            $lastCurrencyDate = DB::select('SELECT date FROM currencies ORDER BY date DESC LIMIT 1');
+            $data['last_date'] = array_column($lastCurrencyDate, 'date')[0] ?? null;
+            $data['first_date'] = Carbon::parse($data['last_date'])->subWeekdays(6)->format('Y-m-d');
+        } catch (\Exception $exception) {
+            $data = [];
+            Log::debug('FAILED: getCurrencyExchangeRatesDates');
+            Log::debug($exception);
+        }
         return $data;
     }
 
@@ -47,19 +57,24 @@ class CurrenciesService
      */
     public function getFilterCurrencies(Request $request): array
     {
-        $filterValue = $request->get('countryFilter');
-        $dateFrom = $request->get('dateFrom');
-        $weekendDay = Carbon::parse($dateFrom)->isWeekend();
-        if ($weekendDay) {
-            $dateFrom = Carbon::parse($dateFrom)->subWeekday();
-        }
-        $dateTo = $request->get('dateTo');
-        $filteredCurrencies = DB::select('SELECT * FROM currencies WHERE country_id LIKE "' . $filterValue . '%" AND date BETWEEN "' . $dateFrom . '" AND "' . $dateTo . '" ORDER BY date');
         $groupedCurrencies = [];
-        foreach ($filteredCurrencies as $currency) {
-            $groupedCurrencies[$currency->date][] = $currency;
-        }
+        try {
+            $filterValue = $request->get('countryFilter');
+            $dateFrom = $request->get('dateFrom');
+            $weekendDay = Carbon::parse($dateFrom)->isWeekend();
+            if ($weekendDay) {
+                $dateFrom = Carbon::parse($dateFrom)->subWeekday();
+            }
+            $dateTo = $request->get('dateTo');
+            $filteredCurrencies = DB::select('SELECT * FROM currencies WHERE country_id LIKE "' . $filterValue . '%" AND date BETWEEN "' . $dateFrom . '" AND "' . $dateTo . '" ORDER BY date');
 
+            foreach ($filteredCurrencies as $currency) {
+                $groupedCurrencies[$currency->date][] = $currency;
+            }
+        } catch (\Exception $exception) {
+            Log::debug('FAILED: getFilterCurrencies');
+            Log::debug($exception);
+        }
         return $groupedCurrencies;
     }
 }

@@ -22,9 +22,15 @@ class CurrenciesDataController
     {
         $data = $this->service->getTodayCurrencies();
 
+        if (empty($data) || empty($data['groupedCurrencies'])) {
+            return response()->json([
+                'error' => true,
+                'message' => 'No data'
+            ]);
+        }
         return response()->json([
             'todayCurrencies' => $data['groupedCurrencies'],
-            'todayDate' => $data['todayDate']
+            'todayDate' => $data['todayDate'],
         ]);
     }
 
@@ -34,7 +40,12 @@ class CurrenciesDataController
     public function currencyExchangeRatesDates(): \Illuminate\Http\JsonResponse
     {
         $data = $this->service->getCurrencyExchangeRatesDates();
-
+        if (empty($data)) {
+            return response()->json([
+                'error' => true,
+                'message' => 'No data'
+            ]);
+        }
         return response()->json([
             'firstDate' => $data['first_date'],
             'lastDate' => $data['last_date']
@@ -47,9 +58,15 @@ class CurrenciesDataController
      */
     public function filterCurrencies(Request $request): \Illuminate\Http\JsonResponse
     {
-        $groupedCurrencies = $this->service->getFilterCurrencies($request);
+        $data = $this->service->getFilterCurrencies($request);
+        if (empty($data)) {
+            return response()->json([
+                'error' => true,
+                'message' => 'No data'
+            ]);
+        }
         return response()->json([
-            'filteredCurrencies' => $groupedCurrencies
+            'filteredCurrencies' => $data
         ]);
     }
 }
