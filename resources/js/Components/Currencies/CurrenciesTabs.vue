@@ -7,28 +7,33 @@ export default {
             allCurrencies: [],
             dateFrom: null,
             dateTo: null,
-            minDate: (new Date()).toISOString().split('T')[0],
-            maxDate: (new Date()).toISOString().split('T')[0],
-            currentTab: 0,
+            minDate1: null,
+            maxDate1: null,
+            minDate2: null,
+            maxDate2: null,
+            currentTab: null,
             countryFilter: null,
         }
     },
     methods: {
         getTodayCurrencyExchangeValues() {
             axios.get(route('currencies.today')).then((response) => {
-                this.allCurrencies.push(response.data.todayCurrencies);
+                this.allCurrencies = response.data.todayCurrencies;
+                this.dateFrom = response.data.todayDate;
+                this.dateTo = response.data.todayDate;
+                this.currentTab = response.data.todayDate;
             });
+
         },
         getDatesWithCurrencyExchangeData() {
             axios.get(route('currencies.dates')).then((response) => {
-                this.minDate = this.dateFrom = response.data.firstDate;
-                this.maxDate = this.dateTo = response.data.lastDate;
+                this.minDate1 = this.dateFrom = response.data.firstDate;
+                this.maxDate1 = this.dateTo = response.data.lastDate;
+                this.minDate2 = this.dateFrom = response.data.firstDate;
+                this.maxDate2 = this.dateTo = response.data.lastDate;
             });
-            console.log(this.dateFrom)
-            console.log(this.dateTo)
         },
         filterCurrencies() {
-
             axios.get(route('currencies.filter',
                 {
                     countryFilter: this.countryFilter,
@@ -36,12 +41,10 @@ export default {
                     dateTo: this.dateTo,
                 })).then((response) => {
                 this.allCurrencies = response.data.filteredCurrencies;
-                this.currentTab = this.dateFrom;
-                this.minDate = this.dateFrom;
-                this.maxDate = this.dateTo;
+                this.currentTab = Object.keys(this.allCurrencies)[0];
+                this.maxDate1 = this.dateTo;
+                this.minDate2 = this.dateFrom;
             });
-            console.log(this.minDate)
-            console.log(this.maxDate)
         },
         changeTable(index) {
             this.currentTab = index;
@@ -67,11 +70,21 @@ export default {
             </div>
             <div class="sm:flex sm:items-center sm:justify-center mb-4">
                 <div>
-                    <div class="sm:ml-2 sm:flex-none">
-                        <input type="text" v-model="countryFilter" v-on:input="filterCurrencies"
-                               placeholder="Country code...">
-                        <input type="date" @change="filterCurrencies" v-model="dateFrom" :min="minDate" :max="maxDate">
-                        <input type="date" @change="filterCurrencies" v-model="dateTo" :min="minDate" :max="maxDate">
+                    <div class="border-2 border-gray-200 rounded p-2">
+                        <h1 class="sm:items-center text-center text-base font-semibold leading-6 text-gray-900">
+                            Filter</h1>
+                        <div class="sm:ml-2 sm:flex gap-3">
+                            <input type="text"
+                                   class="flex-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                   v-model="countryFilter" v-on:input="filterCurrencies"
+                                   placeholder="Country code...">
+                            <input type="date"
+                                   class="flex-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                   @change="filterCurrencies" v-model="dateFrom" :min="minDate1" :max="maxDate1">
+                            <input type="date"
+                                   class="flex-1 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                   @change="filterCurrencies" v-model="dateTo" :min="minDate2" :max="maxDate2">
+                        </div>
                     </div>
                 </div>
             </div>
