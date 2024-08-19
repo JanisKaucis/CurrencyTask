@@ -6,10 +6,17 @@ export default {
             currencies: null,
             dateFrom: null,
             dateTo: null,
+            minDate: new Date().toISOString().split('T')[0],
+            maxDate: new Date().toJSON().slice(0, 10),
         }
     },
     methods: {
         getTodayCurrencyExchangeValues() {
+            axios.get(route('currencies.today')).then((response) => {
+                this.currencies = response.data.todayCurrencies;
+            });
+        },
+        getDatesWithCurrencyExchangeData() {
             axios.get(route('currencies.today')).then((response) => {
                 this.currencies = response.data.todayCurrencies;
             });
@@ -30,8 +37,8 @@ export default {
             </div>
 
             <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <input type="date" v-model="dateFrom">
-                <input type="date" v-model="dateTo">
+                <input type="date" v-model="dateFrom" :min="minDate" :max="maxDate">
+                <input type="date" v-model="dateTo" :min="minDate" :max="maxDate">
             </div>
         </div>
         <div class="mt-8 flow-root">

@@ -42,36 +42,41 @@ trait CurrencyExchange
     public function saveCurrencies($array): void
     {
         try {
-            $currenciesArray = $this->getCurrenciesArray($array);
-            DB::table('currencies')->insert($currenciesArray);
 
+            $currenciesValues = $this->getCurrenciesValues($array);
+            if (empty($currenciesValues)) {
+                return;
+            }
+            DB::insert("INSERT INTO currencies (Country_id,Rate, Date) VALUES ".$currenciesValues.";");
         } catch (\Exception $exception) {
             Log::debug('FAILED: saveCurrencies');
             Log::debug($exception);
         }
     }
+
     /**
      * @param $array
-     * @return array
+     * @return string
      */
-    public function getCurrenciesArray($array): array
+    public function getCurrenciesValues($array): string
     {
-        $currenciesArray = [];
+        $currenciesValues = '';
         $date = $this->getDate($array);
-        $existingDates = DB::table('currencies')->distinct()->pluck('date')->toArray();
+        $existingDates = DB::select("SELECT DISTINCT date FROM currencies");
+        $existingDates = array_column($existingDates,'date');
+
         $currencies = $array['Currencies']['Currency'];
         if (in_array($date, $existingDates) || !$currencies) {
-            return $currenciesArray;
+            return $currenciesValues;
         }
-        foreach ($currencies as $currency) {
-            $currenciesArray[] = [
-                'country_id' => $currency['ID'],
-                'rate' => $currency['Rate'],
-                'date' => $date
-            ];
+        $currenciesCount = count($currencies);
+        $i = 0;
+        foreach ($currencies as $key => $currency) {
+            $currenciesValues .= "('". $currency['ID']."','". $currency['Rate']."','". $date.
+                (++$i === $currenciesCount ? "')" : "'),");
         }
 
-        return $currenciesArray;
+        return $currenciesValues;
     }
     /**
      * @param $array

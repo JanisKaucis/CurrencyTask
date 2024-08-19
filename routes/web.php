@@ -19,10 +19,13 @@ use Illuminate\Support\Facades\Route;
 | Public routes without middlewares
 |--------------------------------------------------------------------------
 */
-Route::get('/', [CurrenciesController::class, 'index'])->name('currencies.index');
+Route::permanentRedirect('/', '/currency-exchange-rates')->name('home');
+
 /*
 |--------------------------------------------------------------------------
 | Routes for currencies
 |--------------------------------------------------------------------------
 */
+Route::get('/currency-exchange-rates', [CurrenciesController::class, 'index'])->name('currencies.index');
 Route::get('/currencies-today', [CurrenciesDataController::class, 'getTodayCurrencies'])->name('currencies.today');
+Route::get('/dates-with-currencies', [CurrenciesDataController::class, 'getCurrencyDatesExchangeRates'])->name('currencies.dates');

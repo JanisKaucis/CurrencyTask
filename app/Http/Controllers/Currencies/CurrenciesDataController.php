@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Currencies;
 
 use Carbon\Carbon;
@@ -13,11 +14,14 @@ class CurrenciesDataController
     public function getTodayCurrencies(): \Illuminate\Http\JsonResponse
     {
         $todayDate = Carbon::now()->subWeekdays()->format('Y-m-d');
-        $todayCurrencies = DB::table('currencies')->where('date', $todayDate)->get();
-        Log::debug($todayDate);
-        Log::debug($todayCurrencies);
+        $todayCurrencies = DB::select('SELECT * FROM currencies WHERE date="' . $todayDate . '"');
         return response()->json([
             'todayCurrencies' => $todayCurrencies
         ]);
+    }
+
+    public function getCurrencyDatesExchangeRates()
+    {
+        $firstCurrencyDate = DB::table('currencies')->where('date', $todayDate)->get();
     }
 }
