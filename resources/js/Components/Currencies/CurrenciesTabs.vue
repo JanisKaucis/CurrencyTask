@@ -123,7 +123,7 @@ export default {
                         <button @click="changeTable(index)"
                                 :class="[index === currentTab ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']"
                                 :aria-current="index === currentTab ? 'page' : undefined">
-                            {{ new Date(index).getDate() + '.' + (new Date(index).getMonth() + 1) }}
+                            {{new Date(index).getDate() + '. ' + formattedMonth[(new Date(index).getMonth())] }}
                         </button>
                     </template>
                     <template v-for="(currencies, index) in allCurrencies" :key="index">
@@ -145,8 +145,9 @@ export default {
                                 <template v-for="(currencies, index) in allCurrencies" :key="index">
                                     <button @click="changeTable(index)"
                                             :class="[index === currentTab ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']"
-                                            :aria-current="index === currentTab ? 'page' : undefined">{{
-                                            new Date(index).getDate() + '. ' + formattedMonth[(new Date(index).getMonth())]
+                                            :aria-current="index === currentTab ? 'page' : undefined">
+                                        {{
+                                                new Date(index).getDate() + '. ' + formattedMonth[(new Date(index).getMonth())]
                                         }}
                                     </button>
                                 </template>
