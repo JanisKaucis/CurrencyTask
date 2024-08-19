@@ -20,7 +20,8 @@ class GetActualCurrencyDataFromBankAPI extends Command
      *
      * @var string
      */
-    protected $description = 'This command gets actual data about all currency exchange rates for EUR to other currencies';
+    protected $description = 'This command gets actual data about all currency exchange rates for EUR to other
+    currencies for current day.';
 
     /**
      * Execute the console command.
