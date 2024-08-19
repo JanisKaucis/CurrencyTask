@@ -6,7 +6,7 @@ export default {
 
 <template>
     <footer class="bg-gray-200">
-        <div class="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
+        <div class="mx-auto max-w-7xl md:w-5/6 xl:w-3/5 px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
             <div class="flex justify-center space-x-6 md:order-2">
                 <a v-for="item in navigation" :key="item.name" :href="item.href" class="text-gray-400 hover:text-gray-900">
                     <span class="sr-only">{{ item.name }}</span>
