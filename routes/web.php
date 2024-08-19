@@ -28,4 +28,6 @@ Route::permanentRedirect('/', '/currency-exchange-rates')->name('home');
 */
 Route::get('/currency-exchange-rates', [CurrenciesController::class, 'index'])->name('currencies.index');
 Route::get('/currencies-today', [CurrenciesDataController::class, 'getTodayCurrencies'])->name('currencies.today');
+Route::get('/all-currencies-', [CurrenciesDataController::class, 'getAllCurrencies'])->name('currencies.all');
 Route::get('/dates-with-currencies', [CurrenciesDataController::class, 'getCurrencyDatesExchangeRates'])->name('currencies.dates');
+Route::get('/filter-currencies', [CurrenciesDataController::class, 'filterCurrencies'])->name('currencies.filter');
