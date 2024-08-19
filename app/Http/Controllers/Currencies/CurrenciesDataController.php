@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Currencies;
 
 use App\Services\CurrenciesService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CurrenciesDataController
 {

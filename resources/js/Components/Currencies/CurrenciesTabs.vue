@@ -13,6 +13,20 @@ export default {
             maxDate2: null,
             currentTab: null,
             countryFilter: null,
+            formattedMonth: {
+                0 : 'Jan',
+                1 : 'Feb',
+                2:  'Mar',
+                3: 'Apr',
+                4 : 'May',
+                5 : 'Jun',
+                6 : 'Jul',
+                7 : 'Aug',
+                8 : 'Sep',
+                9 : 'Oct',
+                10 : 'Nov',
+                11 : 'Dec',
+            },
         }
     },
     methods: {
@@ -22,15 +36,18 @@ export default {
                 this.dateFrom = response.data.todayDate;
                 this.dateTo = response.data.todayDate;
                 this.currentTab = response.data.todayDate;
+                console.log(response.data.todayDate)
+                console.log(this.dateFrom)
+                console.log(this.dateTo)
             });
 
         },
         getDatesWithCurrencyExchangeData() {
             axios.get(route('currencies.dates')).then((response) => {
-                this.minDate1 = this.dateFrom = response.data.firstDate;
-                this.maxDate1 = this.dateTo = response.data.lastDate;
-                this.minDate2 = this.dateFrom = response.data.firstDate;
-                this.maxDate2 = this.dateTo = response.data.lastDate;
+                this.minDate1 = response.data.firstDate;
+                this.maxDate1 = this.dateFrom = this.dateTo = response.data.lastDate;
+                this.minDate2 = response.data.firstDate;
+                this.maxDate2 = response.data.lastDate;
             });
         },
         filterCurrencies() {
@@ -49,6 +66,9 @@ export default {
         changeTable(index) {
             this.currentTab = index;
         }
+    },
+    computed: {
+
     },
     mounted() {
         this.getTodayCurrencyExchangeValues();
@@ -93,7 +113,7 @@ export default {
                 <template v-for="(currencies, index) in allCurrencies" :key="index">
                     <button @click="changeTable(index)"
                             :class="[index === currentTab ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']"
-                            :aria-current="index === currentTab ? 'page' : undefined">Tab
+                            :aria-current="index === currentTab ? 'page' : undefined">{{ new Date(index).getDate() + '.' + (new Date(index).getMonth() + 1)  }}
                     </button>
                 </template>
                 <template v-for="(currencies, index) in allCurrencies" :key="index">
@@ -109,7 +129,7 @@ export default {
                             <template v-for="(currencies, index) in allCurrencies" :key="index">
                                 <button @click="changeTable(index)"
                                         :class="[index === currentTab ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700', 'whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium']"
-                                        :aria-current="index === currentTab ? 'page' : undefined">{{ index }}
+                                        :aria-current="index === currentTab ? 'page' : undefined">{{ new Date(index).getDate() + '. ' + formattedMonth[(new Date(index).getMonth())]  }}
                                 </button>
                             </template>
                             <template v-for="(currencies, index) in allCurrencies" :key="index">

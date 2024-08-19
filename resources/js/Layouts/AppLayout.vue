@@ -12,7 +12,7 @@ export default defineComponent({
 <template>
         <PageHeader/>
     <body />
-    <div class="w-full md:w-5/6 xl:w-3/5 h-full bg-blue-50 m-auto">
+    <div class="w-full min-h-screen md:w-5/6 xl:w-3/5 h-full pb-4 bg-blue-50 m-auto">
         <slot name="page_body"/>
     </div>
     <PageFooter/>
