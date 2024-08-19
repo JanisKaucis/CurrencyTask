@@ -40,9 +40,18 @@ class CurrenciesService
     {
         $data = [];
         try {
+            $firstCurrencyDate = DB::select('SELECT date FROM currencies ORDER BY date ASC LIMIT 1');
+
+            $data['first_date'] = array_column($firstCurrencyDate, 'date')[0] ?? null;
             $lastCurrencyDate = DB::select('SELECT date FROM currencies ORDER BY date DESC LIMIT 1');
             $data['last_date'] = array_column($lastCurrencyDate, 'date')[0] ?? null;
-            $data['first_date'] = Carbon::parse($data['last_date'])->subWeekdays(6)->format('Y-m-d');
+            $carbonFirstDate = Carbon::parse($data['first_date']);
+            $carbonLastDate = Carbon::parse($data['last_date']);
+            $differenceInDays = $carbonFirstDate->diffInWeekdays($carbonLastDate);
+            if ($differenceInDays > 6) {
+                $data['first_date'] = Carbon::parse($data['last_date'])->subWeekdays(6)->format('Y-m-d');
+            }
+
         } catch (\Exception $exception) {
             $data = [];
             Log::debug('FAILED: getCurrencyExchangeRatesDates');
