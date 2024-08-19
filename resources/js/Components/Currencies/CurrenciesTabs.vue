@@ -42,9 +42,6 @@ export default {
                 this.dateFrom = response.data.todayDate;
                 this.dateTo = response.data.todayDate;
                 this.currentTab = response.data.todayDate;
-                console.log(response.data.todayDate)
-                console.log(this.dateFrom)
-                console.log(this.dateTo)
             });
 
         },
