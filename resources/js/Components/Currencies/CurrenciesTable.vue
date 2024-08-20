@@ -26,7 +26,8 @@ export default {
                         <thead>
                         <tr>
                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Currency</th>
-                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rate for 1 EUR</th>
+                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                                Currency unit for 1 euro</th>
                         </tr>
                         </thead>
                         <tbody class="bg-white">
