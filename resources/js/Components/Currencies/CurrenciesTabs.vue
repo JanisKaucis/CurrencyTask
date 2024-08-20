@@ -49,7 +49,7 @@ export default {
             axios.get(route('currencies.dates')).then((response) => {
                 this.minDate1 = response.data.firstDate;
                 this.maxDate1 = this.dateFrom = this.dateTo = response.data.lastDate;
-                this.minDate2 = response.data.firstDate;
+                this.minDate2 = response.data.lastDate;
                 this.maxDate2 = response.data.lastDate;
             });
         },
