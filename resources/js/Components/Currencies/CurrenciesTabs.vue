@@ -33,15 +33,15 @@ export default {
     },
     methods: {
         getTodayCurrencyExchangeValues() {
-            axios.get(route('currencies.today')).then((response) => {
+            axios.get(route('currencies.latest')).then((response) => {
                 if (response.data.error) {
                     this.error = true;
                     this.errorMessage = response.data.message;
                 }
-                this.allCurrencies = response.data.todayCurrencies;
-                this.dateFrom = response.data.todayDate;
-                this.dateTo = response.data.todayDate;
-                this.currentTab = response.data.todayDate;
+                this.allCurrencies = response.data.latestCurrencies;
+                this.dateFrom = response.data.latestDate;
+                this.dateTo = response.data.latestDate;
+                this.currentTab = response.data.latestDate;
             });
 
         },

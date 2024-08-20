@@ -18,9 +18,9 @@ class CurrenciesDataController
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function todayCurrencies(): \Illuminate\Http\JsonResponse
+    public function latestCurrencies(): \Illuminate\Http\JsonResponse
     {
-        $data = $this->service->getTodayCurrencies();
+        $data = $this->service->getLatestCurrencies();
 
         if (empty($data) || empty($data['groupedCurrencies'])) {
             return response()->json([
@@ -29,8 +29,8 @@ class CurrenciesDataController
             ]);
         }
         return response()->json([
-            'todayCurrencies' => $data['groupedCurrencies'],
-            'todayDate' => $data['todayDate'],
+            'latestCurrencies' => $data['groupedCurrencies'],
+            'latestDate' => $data['latestDate'],
         ]);
     }
 

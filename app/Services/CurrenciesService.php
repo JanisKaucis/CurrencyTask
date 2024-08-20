@@ -12,23 +12,21 @@ class CurrenciesService
     /**
      * @return array
      */
-    public function getTodayCurrencies(): array
+    public function getLatestCurrencies(): array
     {
-        /*If week day is in weekend, then it will find last week day, because bank does not show currencies in weekend
-        days*/
         $data = [];
         try {
             $lastCurrencyDate = DB::select('SELECT date FROM currencies ORDER BY date DESC LIMIT 1');
-            $data['todayDate'] = array_column($lastCurrencyDate, 'date')[0] ?? null;
-            $todayCurrencies = DB::select('SELECT * FROM currencies WHERE date="' . $data['todayDate'] . '"');
+            $data['latestDate'] = array_column($lastCurrencyDate, 'date')[0] ?? null;
+            $latestCurrencies = DB::select('SELECT * FROM currencies WHERE date="' . $data['latestDate'] . '"');
             $data['groupedCurrencies'] = [];
-            foreach ($todayCurrencies as $currency) {
+            foreach ($latestCurrencies as $currency) {
                 $currency = (array)$currency;
                 $data['groupedCurrencies'][$currency['date']][] = $currency;
             }
         } catch (\Exception $exception) {
             $data = [];
-            Log::debug('FAILED: getTodayCurrencies');
+            Log::debug('FAILED: getLatestCurrencies');
             Log::debug($exception);
         }
         return $data;
