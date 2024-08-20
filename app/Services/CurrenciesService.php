@@ -18,7 +18,8 @@ class CurrenciesService
         days*/
         $data = [];
         try {
-            $data['todayDate'] = Carbon::now()->nextWeekday()->previousWeekday()->format('Y-m-d');
+            $lastCurrencyDate = DB::select('SELECT date FROM currencies ORDER BY date DESC LIMIT 1');
+            $data['todayDate'] = array_column($lastCurrencyDate, 'date')[0] ?? null;
             $todayCurrencies = DB::select('SELECT * FROM currencies WHERE date="' . $data['todayDate'] . '"');
             $data['groupedCurrencies'] = [];
             foreach ($todayCurrencies as $currency) {
