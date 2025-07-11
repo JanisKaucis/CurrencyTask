@@ -20,13 +20,4 @@ reference rates.
    This command gets actual data about all currency exchange rates for EUR to other currencies
    for last 7 days.
 
-                             How to set up for docker
-   I could be wrong about this one, but I will try:
-1. php artisan sail:install
-2. choose your database server from menu
-3. ./vendor/bin/sail up or ./vendor/bin/sail up -d for docker
-4. php artisan migrate
-5. npm run dev
-             And that is it
-
 
