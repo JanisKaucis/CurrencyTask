@@ -1,6 +1,6 @@
                         How to run project
 
-1. git clone https://github.com/JanisKaucis/MaponTask.git
+1. git clone https://github.com/JanisKaucis/CurrencyTask.git
 2. composer install
 3. Duplicate the .env.example file and rename it to .env
 4. Open the .env file and set your database connection details
